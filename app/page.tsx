@@ -26,13 +26,10 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-8 md:p-24 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="w-full max-w-7xl">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-center text-gray-900 dark:text-white">
-          Mosaic
+      <div className="w-full max-w-7xl relative">
+        <h1 className="text-5xl md:text-6xl font-black mb-4 text-left text-gray-900 dark:text-white tracking-tight absolute top-0 left-0" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '-0.02em' }}>
+          MOSAIC
         </h1>
-        <p className="text-lg md:text-xl text-center mb-12 text-gray-600 dark:text-gray-400">
-          Explore Computer Science Topics
-        </p>
 
         {/* Hexagonal Mosaic Layout */}
         <div className="flex justify-center items-center min-h-[600px] md:min-h-[700px]">
