@@ -87,6 +87,18 @@ if [ -n "$PYTHON" ]; then
         exit 1
     }
 
+    # Run mypy type checking
+    echo "🔍 Type checking with mypy..."
+    if "$PYTHON" -c "import mypy" 2>/dev/null; then
+        "$PYTHON" -m mypy . --config-file ../mypy.ini || {
+            echo "❌ Type checking failed!"
+            exit 1
+        }
+    else
+        echo "⚠️  mypy not installed, skipping type checking"
+        echo "   Install with: pip install mypy"
+    fi
+
     # Check if dependencies are installed
     echo "🔍 Checking Python dependencies..."
     if ! "$PYTHON" -c "import fastapi, numpy, pytest" 2>/dev/null; then

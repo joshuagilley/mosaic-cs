@@ -2,10 +2,15 @@
 Core linear algebra operations using NumPy
 """
 
+from typing import TypedDict
+
 import numpy as np
+from numpy.typing import NDArray
 
 
-def transform_points(points: np.ndarray, matrix: np.ndarray) -> np.ndarray:
+def transform_points(
+    points: NDArray[np.float64], matrix: NDArray[np.float64]
+) -> NDArray[np.float64]:
     """
     Apply matrix transformation to points
 
@@ -24,7 +29,9 @@ def transform_points(points: np.ndarray, matrix: np.ndarray) -> np.ndarray:
     return points @ matrix.T
 
 
-def compute_eigen(matrix: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def compute_eigen(
+    matrix: NDArray[np.float64],
+) -> tuple[NDArray[np.complex128], NDArray[np.complex128]]:
     """
     Compute eigenvalues and eigenvectors
 
@@ -37,7 +44,9 @@ def compute_eigen(matrix: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     if matrix.shape != (2, 2):
         raise ValueError("Matrix must be 2x2")
 
-    eigenvalues, eigenvectors = np.linalg.eig(matrix)
+    eig_result = np.linalg.eig(matrix)
+    eigenvalues: NDArray[np.complex128] = eig_result[0].astype(np.complex128)
+    eigenvectors: NDArray[np.complex128] = eig_result[1].astype(np.complex128)
 
     # Normalize eigenvectors
     for i in range(eigenvectors.shape[1]):
@@ -46,7 +55,7 @@ def compute_eigen(matrix: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     return eigenvalues, eigenvectors
 
 
-def compute_determinant(matrix: np.ndarray) -> float:
+def compute_determinant(matrix: NDArray[np.float64]) -> float:
     """
     Compute determinant of matrix
 
@@ -62,7 +71,7 @@ def compute_determinant(matrix: np.ndarray) -> float:
     return float(np.linalg.det(matrix))
 
 
-def generate_grid(size: int = 10, range_val: float = 5.0) -> np.ndarray:
+def generate_grid(size: int = 10, range_val: float = 5.0) -> NDArray[np.float64]:
     """
     Generate a grid of points for visualization
 
@@ -93,7 +102,16 @@ def generate_grid(size: int = 10, range_val: float = 5.0) -> np.ndarray:
     return np.array(points)
 
 
-def compute_pca(data: np.ndarray) -> dict:
+class PCAResult(TypedDict):
+    """Type definition for PCA results"""
+
+    principal_components: NDArray[np.float64]
+    explained_variance: NDArray[np.float64]
+    projected_data: NDArray[np.float64]
+    mean: NDArray[np.float64]
+
+
+def compute_pca(data: NDArray[np.float64]) -> PCAResult:
     """
     Perform Principal Component Analysis on 2D data
 
@@ -143,7 +161,7 @@ def compute_pca(data: np.ndarray) -> dict:
     }
 
 
-def create_rotation_matrix(angle: float) -> np.ndarray:
+def create_rotation_matrix(angle: float) -> NDArray[np.float64]:
     """
     Create a 2D rotation matrix
 
@@ -158,7 +176,7 @@ def create_rotation_matrix(angle: float) -> np.ndarray:
     return np.array([[cos_a, -sin_a], [sin_a, cos_a]])
 
 
-def create_scale_matrix(sx: float, sy: float) -> np.ndarray:
+def create_scale_matrix(sx: float, sy: float) -> NDArray[np.float64]:
     """
     Create a 2D scaling matrix
 
@@ -172,7 +190,7 @@ def create_scale_matrix(sx: float, sy: float) -> np.ndarray:
     return np.array([[sx, 0], [0, sy]])
 
 
-def create_reflection_matrix(axis: str = "x") -> np.ndarray:
+def create_reflection_matrix(axis: str = "x") -> NDArray[np.float64]:
     """
     Create a 2D reflection matrix
 
@@ -190,7 +208,7 @@ def create_reflection_matrix(axis: str = "x") -> np.ndarray:
         raise ValueError("Axis must be 'x' or 'y'")
 
 
-def create_shear_matrix(kx: float, ky: float) -> np.ndarray:
+def create_shear_matrix(kx: float, ky: float) -> NDArray[np.float64]:
     """
     Create a 2D shearing matrix
 
