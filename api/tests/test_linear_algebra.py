@@ -4,7 +4,7 @@ Unit tests for linear algebra operations
 
 import numpy as np
 import pytest
-from linear_algebra import (
+from data_science.vektor.linear_algebra import (
     compute_determinant,
     compute_eigen,
     compute_pca,

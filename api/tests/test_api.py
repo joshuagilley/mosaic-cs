@@ -33,7 +33,7 @@ class TestTransformEndpoint:
     def test_transform_with_default_grid(self):
         """Transform should work with default grid"""
         response = client.post(
-            "/api/transform",
+            "/api/data-science/vektor/transform",
             json={
                 "matrix": [[1, 0], [0, 1]],
                 "grid_size": 5,
@@ -51,7 +51,7 @@ class TestTransformEndpoint:
     def test_transform_with_custom_points(self):
         """Transform should work with custom points"""
         response = client.post(
-            "/api/transform",
+            "/api/data-science/vektor/transform",
             json={
                 "matrix": [[2, 0], [0, 2]],
                 "points": [[1, 1], [2, 2]],
@@ -64,7 +64,7 @@ class TestTransformEndpoint:
     def test_transform_rotation(self):
         """Transform should handle rotation"""
         response = client.post(
-            "/api/transform",
+            "/api/data-science/vektor/transform",
             json={
                 "matrix": [[0, -1], [1, 0]],  # 90 degree rotation
                 "points": [[1, 0]],
@@ -84,7 +84,7 @@ class TestEigenEndpoint:
     def test_eigen_identity(self):
         """Identity matrix should have eigenvalues of 1"""
         response = client.post(
-            "/api/eigen",
+            "/api/data-science/vektor/eigen",
             json={"matrix": [[1, 0], [0, 1]]},
         )
         assert response.status_code == 200
@@ -98,7 +98,7 @@ class TestEigenEndpoint:
     def test_eigen_diagonal(self):
         """Diagonal matrix eigenvalues"""
         response = client.post(
-            "/api/eigen",
+            "/api/data-science/vektor/eigen",
             json={"matrix": [[2, 0], [0, 3]]},
         )
         assert response.status_code == 200
@@ -114,7 +114,7 @@ class TestDeterminantEndpoint:
     def test_determinant_identity(self):
         """Identity matrix determinant should be 1"""
         response = client.post(
-            "/api/determinant",
+            "/api/data-science/vektor/determinant",
             json={"matrix": [[1, 0], [0, 1]]},
         )
         assert response.status_code == 200
@@ -124,7 +124,7 @@ class TestDeterminantEndpoint:
     def test_determinant_general(self):
         """General matrix determinant"""
         response = client.post(
-            "/api/determinant",
+            "/api/data-science/vektor/determinant",
             json={"matrix": [[1, 2], [3, 4]]},
         )
         assert response.status_code == 200
@@ -134,7 +134,7 @@ class TestDeterminantEndpoint:
     def test_determinant_zero(self):
         """Matrix with zero determinant"""
         response = client.post(
-            "/api/determinant",
+            "/api/data-science/vektor/determinant",
             json={"matrix": [[1, 2], [2, 4]]},
         )
         assert response.status_code == 200
@@ -149,7 +149,7 @@ class TestPCAEndpoint:
         """PCA should work on simple 2D data"""
         data = [[1, 1], [2, 2], [3, 3], [4, 4]]
         response = client.post(
-            "/api/pca",
+            "/api/data-science/vektor/pca",
             json={"data": data},
         )
         assert response.status_code == 200
@@ -165,7 +165,7 @@ class TestPCAEndpoint:
 
         data = [[random.random(), random.random()] for _ in range(20)]
         response = client.post(
-            "/api/pca",
+            "/api/data-science/vektor/pca",
             json={"data": data},
         )
         assert response.status_code == 200
@@ -180,7 +180,7 @@ class TestErrorHandling:
     def test_invalid_matrix_shape(self):
         """Should handle invalid matrix shape gracefully"""
         response = client.post(
-            "/api/determinant",
+            "/api/data-science/vektor/determinant",
             json={"matrix": [[1, 2, 3], [4, 5, 6]]},
         )
         # The endpoint validates and returns 422 (Unprocessable Entity)
@@ -190,7 +190,7 @@ class TestErrorHandling:
     def test_missing_matrix(self):
         """Should return error for missing matrix"""
         response = client.post(
-            "/api/determinant",
+            "/api/data-science/vektor/determinant",
             json={},
         )
         assert response.status_code == 422  # Validation error

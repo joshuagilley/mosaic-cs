@@ -10,7 +10,7 @@ export default function DataScience() {
     { id: 0, name: 'Data Science', path: '#', description: 'Explore Data Science', radius: 0, angle: 0, color: 'from-blue-500 to-blue-600' },
     
     // Inner ring (6 hexagons)
-    { id: 1, name: 'Vektor', path: '/vektor', description: 'Linear Algebra Playground', radius: 1, angle: 210, color: 'from-blue-500 to-blue-600' }, // Bottom-left
+    { id: 1, name: 'Vektor', path: '/data-science/vektor', description: 'Linear Algebra Playground', radius: 1, angle: 210, color: 'from-blue-500 to-blue-600' }, // Bottom-left
     { id: 2, name: 'Coming Soon', path: '#', description: 'More tools coming...', radius: 1, angle: 270, color: 'from-gray-300 to-gray-400' }, // Bottom
     { id: 3, name: 'Coming Soon', path: '#', description: 'More tools coming...', radius: 1, angle: 330, color: 'from-gray-300 to-gray-400' }, // Bottom-right
     { id: 4, name: 'Coming Soon', path: '#', description: 'More tools coming...', radius: 1, angle: 30, color: 'from-gray-300 to-gray-400' }, // Top-right

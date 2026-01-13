@@ -1,0 +1,1 @@
+"""Vektor linear algebra application"""

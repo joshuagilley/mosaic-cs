@@ -31,7 +31,7 @@ export default function VektorPage() {
   const updateMatrix = useCallback(async () => {
     try {
       // Transform grid
-      const transformResponse = await fetch(`${API_BASE}/api/transform`, {
+      const transformResponse = await fetch(`${API_BASE}/api/data-science/vektor/transform`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -51,7 +51,7 @@ export default function VektorPage() {
 
       // Transform vector
       const vectorArray = [vector];
-      const vectorResponse = await fetch(`${API_BASE}/api/transform`, {
+      const vectorResponse = await fetch(`${API_BASE}/api/data-science/vektor/transform`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -70,7 +70,7 @@ export default function VektorPage() {
       }
 
       // Compute determinant
-      const detResponse = await fetch(`${API_BASE}/api/determinant`, {
+      const detResponse = await fetch(`${API_BASE}/api/data-science/vektor/determinant`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ matrix: matrix })
@@ -81,7 +81,7 @@ export default function VektorPage() {
 
       // Compute eigenvalues/eigenvectors
       if (showEigen) {
-        const eigenResponse = await fetch(`${API_BASE}/api/eigen`, {
+        const eigenResponse = await fetch(`${API_BASE}/api/data-science/vektor/eigen`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ matrix: matrix })
@@ -416,7 +416,7 @@ export default function VektorPage() {
     }
 
     try {
-      const response = await fetch(`${API_BASE}/api/pca`, {
+      const response = await fetch(`${API_BASE}/api/data-science/vektor/pca`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data: pcaData })
@@ -434,8 +434,8 @@ export default function VektorPage() {
     <div className="min-h-screen bg-[#0a192f] text-[#e6f1ff] p-4 md:p-8">
       <div className="max-w-[1600px] mx-auto">
         <header className="text-center mb-8">
-          <Link href="/" className="text-[#64ffda] hover:underline mb-2 inline-block">
-            ← Back to Mosaic
+          <Link href="/data-science" className="text-[#64ffda] hover:underline mb-2 inline-block">
+            ← Back to Data Science
           </Link>
           <h1 className="text-4xl md:text-5xl font-bold mb-2 text-white">Vektor</h1>
           <p className="text-lg md:text-xl text-[#8892b0]">Linear Algebra Playground</p>
