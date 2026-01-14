@@ -114,7 +114,9 @@ async def get_statistics(file: UploadFile = File(...)) -> dict[str, Any]:
             "statistics": stats,
         }
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error computing statistics: {str(e)}") from None
+        raise HTTPException(
+            status_code=400, detail=f"Error computing statistics: {str(e)}"
+        ) from None
 
 
 @router.post("/histogram")
@@ -144,7 +146,9 @@ async def get_histogram(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from None
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error generating histogram: {str(e)}") from None
+        raise HTTPException(
+            status_code=400, detail=f"Error generating histogram: {str(e)}"
+        ) from None
 
 
 @router.post("/scatter")
@@ -174,7 +178,9 @@ async def get_scatter(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from None
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error generating scatter plot: {str(e)}") from None
+        raise HTTPException(
+            status_code=400, detail=f"Error generating scatter plot: {str(e)}"
+        ) from None
 
 
 @router.post("/correlation")
@@ -196,4 +202,6 @@ async def get_correlation(file: UploadFile = File(...)) -> dict[str, Any]:
 
         return corr_data
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error computing correlation: {str(e)}") from None
+        raise HTTPException(
+            status_code=400, detail=f"Error computing correlation: {str(e)}"
+        ) from None
