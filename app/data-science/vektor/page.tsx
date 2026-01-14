@@ -507,6 +507,84 @@ export default function VektorPage() {
             </div>
 
             <div className="bg-[#112240] p-5 rounded-lg border border-[#233554]">
+              <h2 className="text-xl mb-4 text-[#64ffda] font-semibold">Sliders</h2>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="slider-a" className="text-sm text-[#8892b0]">
+                    a: <span className="text-[#e6f1ff] font-semibold">{matrix[0][0].toFixed(1)}</span>
+                  </label>
+                  <input
+                    type="range"
+                    id="slider-a"
+                    min="-3"
+                    max="3"
+                    step="0.1"
+                    value={matrix[0][0]}
+                    onChange={(e) => handleMatrixChange(0, 0, parseFloat(e.target.value) || 0)}
+                    className="w-full h-2 bg-[#0a192f] rounded-lg appearance-none cursor-pointer accent-[#64ffda]"
+                    style={{
+                      background: `linear-gradient(to right, #64ffda 0%, #64ffda ${((matrix[0][0] + 3) / 6) * 100}%, #233554 ${((matrix[0][0] + 3) / 6) * 100}%, #233554 100%)`
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="slider-b" className="text-sm text-[#8892b0]">
+                    b: <span className="text-[#e6f1ff] font-semibold">{matrix[0][1].toFixed(1)}</span>
+                  </label>
+                  <input
+                    type="range"
+                    id="slider-b"
+                    min="-3"
+                    max="3"
+                    step="0.1"
+                    value={matrix[0][1]}
+                    onChange={(e) => handleMatrixChange(0, 1, parseFloat(e.target.value) || 0)}
+                    className="w-full h-2 bg-[#0a192f] rounded-lg appearance-none cursor-pointer accent-[#64ffda]"
+                    style={{
+                      background: `linear-gradient(to right, #64ffda 0%, #64ffda ${((matrix[0][1] + 3) / 6) * 100}%, #233554 ${((matrix[0][1] + 3) / 6) * 100}%, #233554 100%)`
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="slider-c" className="text-sm text-[#8892b0]">
+                    c: <span className="text-[#e6f1ff] font-semibold">{matrix[1][0].toFixed(1)}</span>
+                  </label>
+                  <input
+                    type="range"
+                    id="slider-c"
+                    min="-3"
+                    max="3"
+                    step="0.1"
+                    value={matrix[1][0]}
+                    onChange={(e) => handleMatrixChange(1, 0, parseFloat(e.target.value) || 0)}
+                    className="w-full h-2 bg-[#0a192f] rounded-lg appearance-none cursor-pointer accent-[#64ffda]"
+                    style={{
+                      background: `linear-gradient(to right, #64ffda 0%, #64ffda ${((matrix[1][0] + 3) / 6) * 100}%, #233554 ${((matrix[1][0] + 3) / 6) * 100}%, #233554 100%)`
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="slider-d" className="text-sm text-[#8892b0]">
+                    d: <span className="text-[#e6f1ff] font-semibold">{matrix[1][1].toFixed(1)}</span>
+                  </label>
+                  <input
+                    type="range"
+                    id="slider-d"
+                    min="-3"
+                    max="3"
+                    step="0.1"
+                    value={matrix[1][1]}
+                    onChange={(e) => handleMatrixChange(1, 1, parseFloat(e.target.value) || 0)}
+                    className="w-full h-2 bg-[#0a192f] rounded-lg appearance-none cursor-pointer accent-[#64ffda]"
+                    style={{
+                      background: `linear-gradient(to right, #64ffda 0%, #64ffda ${((matrix[1][1] + 3) / 6) * 100}%, #233554 ${((matrix[1][1] + 3) / 6) * 100}%, #233554 100%)`
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-[#112240] p-5 rounded-lg border border-[#233554]">
               <h2 className="text-xl mb-4 text-[#64ffda] font-semibold">Presets</h2>
               <div className="grid grid-cols-2 gap-2">
                 <button

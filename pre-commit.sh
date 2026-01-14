@@ -33,9 +33,16 @@ if [ -n "$VIRTUAL_ENV" ]; then
     echo "Using active virtual environment: $VIRTUAL_ENV"
 else
     # Look for virtual environment in common locations
+    # Prioritize api/.venv since that's where the Python code lives
     # Convert to absolute paths so they work after cd
     # Use quotes to handle paths with spaces
-    if [ -f "$PROJECT_DIR/venv/bin/python" ]; then
+    if [ -f "$PROJECT_DIR/api/.venv/bin/python" ]; then
+        PYTHON="$PROJECT_DIR/api/.venv/bin/python"
+        echo "Using virtual environment: api/.venv"
+    elif [ -f "$PROJECT_DIR/api/venv/bin/python" ]; then
+        PYTHON="$PROJECT_DIR/api/venv/bin/python"
+        echo "Using virtual environment: api/venv"
+    elif [ -f "$PROJECT_DIR/venv/bin/python" ]; then
         PYTHON="$PROJECT_DIR/venv/bin/python"
         echo "Using virtual environment: venv"
     elif [ -f "$PROJECT_DIR/.venv/bin/python" ]; then
@@ -44,12 +51,6 @@ else
     elif [ -f "$PROJECT_DIR/env/bin/python" ]; then
         PYTHON="$PROJECT_DIR/env/bin/python"
         echo "Using virtual environment: env"
-    elif [ -f "$PROJECT_DIR/api/venv/bin/python" ]; then
-        PYTHON="$PROJECT_DIR/api/venv/bin/python"
-        echo "Using virtual environment: api/venv"
-    elif [ -f "$PROJECT_DIR/api/.venv/bin/python" ]; then
-        PYTHON="$PROJECT_DIR/api/.venv/bin/python"
-        echo "Using virtual environment: api/.venv"
     fi
     
     # Ensure we have an absolute path

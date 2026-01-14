@@ -1,10 +1,12 @@
 """API routes for Vektor linear algebra application"""
 
+from __future__ import annotations
+
 from typing import Any
 
 import numpy as np
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from .linear_algebra import (
     compute_determinant,
@@ -20,51 +22,48 @@ router = APIRouter(prefix="/api/data-science/vektor", tags=["vektor"])
 class MatrixRequest(BaseModel):
     """Request model for matrix operations"""
 
-    matrix: list[list[float]]
-
-    class Config:
-        """Pydantic config"""
-
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "matrix": [[1.0, 0.0], [0.0, 1.0]],
             }
         }
+    )
+
+    matrix: list[list[float]]
 
 
 class TransformRequest(BaseModel):
     """Request model for matrix transformations"""
 
-    matrix: list[list[float]]
-    points: list[list[float]] | None = None
-    grid_size: int | None = 10
-    grid_range: float | None = 5.0
-
-    class Config:
-        """Pydantic config"""
-
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "matrix": [[1.0, 0.0], [0.0, 1.0]],
                 "grid_size": 10,
                 "grid_range": 5.0,
             }
         }
+    )
+
+    matrix: list[list[float]]
+    points: list[list[float]] | None = None
+    grid_size: int | None = 10
+    grid_range: float | None = 5.0
 
 
 class PCARequest(BaseModel):
     """Request model for PCA computation"""
 
-    data: list[list[float]]
-
-    class Config:
-        """Pydantic config"""
-
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "data": [[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]],
             }
         }
+    )
+
+    data: list[list[float]]
 
 
 @router.post("/transform")
