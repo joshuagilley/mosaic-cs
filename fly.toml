@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for mosaic-floral-river-6731 on 2026-01-13T15:33:16-05:00
+# fly.toml app configuration file generated for mosaic-cs-solitary-tree-957 on 2026-01-14T08:20:33-05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'mosaic-cs'
+app = 'mosaic-cs-solitary-tree-957'
 primary_region = 'iad'
 
 [build]
