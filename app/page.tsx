@@ -124,32 +124,36 @@ function HexagonTile({
 
   // Generate sub-hexagon positions in honeycomb pattern (matching main layout)
   // Helper function to calculate honeycomb positions - matches the CSS flexbox layout
-  const calculateHoneycombPositions = (centerX: number, centerY: number, hexSize: number, items: string[]) => {
+  const calculateHoneycombPositions = (centerX: number, centerY: number, hexSize: number, items: string[], spacing: number = 5) => {
     const hexHeight = hexSize * 1.1547; // Height of pointy-top hexagon
     const rowOverlap = hexHeight * 0.2886; // Vertical overlap between rows (matches CSS margin-top: -0.2886)
     const rowOffsetX = hexSize / 2; // Horizontal shift for offset rows - half hex width to nest into gaps
     
+    // Add subtle spacing (fixed pixel amount) to distances
+    const horizontalDistance = hexSize + spacing;
+    const verticalDistance = hexHeight + spacing;
+    
     // Pattern matches main layout: 2-3-2 (but with center removed, so 2-2-2)
     // Top row (offset): 2 hexagons centered between middle row positions, filling gaps above
-    // Middle row: 2 hexagons (left and right of center) - perfect, don't change
+    // Middle row: 2 hexagons (left and right of center)
     // Bottom row (offset): 2 hexagons centered between middle row positions, filling gaps below
     
-    // Top row (offset) - centered between middle row positions to nest into gaps above
-    const topLeft = { x: centerX - hexSize / 2, y: centerY - hexHeight + rowOverlap, name: items[0] || 'Coming Soon', index: 0 };
-    const topRight = { x: centerX + hexSize / 2, y: centerY - hexHeight + rowOverlap, name: items[1] || 'Coming Soon', index: 1 };
+    // Top row (offset) - centered between middle row positions to nest into gaps above (moved up a bit)
+    const topLeft = { x: centerX - horizontalDistance / 2, y: centerY - verticalDistance + rowOverlap - spacing, name: items[0] || 'Coming Soon', index: 0 };
+    const topRight = { x: centerX + horizontalDistance / 2, y: centerY - verticalDistance + rowOverlap - spacing, name: items[1] || 'Coming Soon', index: 1 };
     
-    // Middle row - directly left and right of center (perfect, don't change)
-    const middleLeft = { x: centerX - hexSize, y: centerY, name: items[2] || 'Coming Soon', index: 2 };
-    const middleRight = { x: centerX + hexSize, y: centerY, name: items[3] || 'Coming Soon', index: 3 };
+    // Middle row - directly left and right of center
+    const middleLeft = { x: centerX - horizontalDistance, y: centerY, name: items[2] || 'Coming Soon', index: 2 };
+    const middleRight = { x: centerX + horizontalDistance, y: centerY, name: items[3] || 'Coming Soon', index: 3 };
     
-    // Bottom row (offset) - centered between middle row positions to nest into gaps below
-    const bottomLeft = { x: centerX - hexSize / 2, y: centerY + hexHeight - rowOverlap, name: items[4] || 'Coming Soon', index: 4 };
-    const bottomRight = { x: centerX + hexSize / 2, y: centerY + hexHeight - rowOverlap, name: items[5] || 'Coming Soon', index: 5 };
+    // Bottom row (offset) - centered between middle row positions to nest into gaps below (moved down a bit)
+    const bottomLeft = { x: centerX - horizontalDistance / 2, y: centerY + verticalDistance - rowOverlap + spacing, name: items[4] || 'Coming Soon', index: 4 };
+    const bottomRight = { x: centerX + horizontalDistance / 2, y: centerY + verticalDistance - rowOverlap + spacing, name: items[5] || 'Coming Soon', index: 5 };
     
     return [topLeft, topRight, middleLeft, middleRight, bottomLeft, bottomRight];
   };
 
-  const subHexPositions = isClickable && tile.subTopics ? calculateHoneycombPositions(0, 0, hexSize, tile.subTopics) : [];
+  const subHexPositions = isClickable && tile.subTopics ? calculateHoneycombPositions(0, 0, hexSize, tile.subTopics, 5) : [];
 
   // Helper to get path for sub-topic
   const getSubTopicPath = (name: string) => {
