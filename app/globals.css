@@ -42,12 +42,16 @@ body {
 .hex-row {
   display: flex;
   justify-content: center;
-  gap: 0px;
-  margin-top: calc(var(--s) * -0.2886); /* overlap for honeycomb interlock */
+  gap: 5px; /* subtle spacing between hexagons */
+  margin-top: calc(var(--s) * -0.2886 + 5px); /* overlap for honeycomb interlock + spacing */
 }
 
 .hex-row:first-child {
-  margin-top: 0; /* no overlap for first row */
+  margin-top: -5px; /* move top row up slightly */
+}
+
+.hex-row:last-child {
+  margin-top: calc(var(--s) * -0.2886 + 5px); /* move bottom row down slightly */
 }
 
 .hex-row.offset {
