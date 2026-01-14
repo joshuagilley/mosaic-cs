@@ -436,8 +436,8 @@ export default function VektorPage() {
     <div className="min-h-screen bg-[#0a192f] text-[#e6f1ff] p-4 md:p-8">
       <div className="max-w-[1600px] mx-auto">
         <header className="text-center mb-8">
-          <Link href="/data-science" className="text-[#64ffda] hover:underline mb-2 inline-block">
-            ← Back to Data Science
+          <Link href="/" className="text-[#64ffda] hover:underline mb-2 inline-block">
+            ← Back to Mosaic
           </Link>
           <h1 className="text-4xl md:text-5xl font-bold mb-2 text-white">Vektor</h1>
           <p className="text-lg md:text-xl text-[#8892b0]">Linear Algebra Playground</p>

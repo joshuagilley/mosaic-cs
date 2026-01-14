@@ -11,7 +11,7 @@ export default function Home() {
   const tiles = [
     // Top row (2 hexagons) - Algorithms first, then Data Science to the right
     { id: 5, name: 'Algorithms & Theory', path: '#', description: 'Computational theory', color: 'from-indigo-500 to-indigo-600', subTopics: ['Coming Soon', 'Coming Soon', 'Coming Soon', 'Coming Soon', 'Coming Soon', 'Coming Soon'] },
-    { id: 1, name: 'Data Science', path: '/data-science', description: 'Data analysis & visualization', color: 'from-blue-500 to-blue-600', subTopics: ['Vektor', 'Coming Soon', 'Coming Soon', 'Coming Soon', 'Coming Soon', 'Coming Soon'] },
+    { id: 1, name: 'Data Science', path: '#', description: 'Data analysis & visualization', color: 'from-blue-500 to-blue-600', subTopics: ['Vektor', 'StatLab', 'Coming Soon', 'Coming Soon', 'Coming Soon', 'Coming Soon'] },
     
     // Middle row (3 hexagons - Computer Science center, Software Engineering swapped to right)
     { id: 6, name: 'Computer Systems', path: '#', description: 'Systems & architecture', color: 'from-teal-500 to-teal-600', subTopics: ['Coming Soon', 'Coming Soon', 'Coming Soon', 'Coming Soon', 'Coming Soon', 'Coming Soon'] },
@@ -108,6 +108,7 @@ function HexagonTile({
   const isCenter = tile.id === 0; // Center is the one with id 0, not necessarily index 0
   const isHovered = hoveredTile === tile.id;
   const hasHoveredTile = hoveredTile !== null && hoveredTile !== tile.id;
+  const hasSubTopics = tile.subTopics && tile.subTopics.length > 0;
   
   const hexSize = 160;
   
@@ -150,19 +151,27 @@ function HexagonTile({
     return [topLeft, topRight, middleLeft, middleRight, bottomLeft, bottomRight];
   };
 
-  const subHexPositions = isClickable && tile.subTopics ? calculateHoneycombPositions(0, 0, hexSize, tile.subTopics, 5) : [];
+  const subHexPositions = hasSubTopics ? calculateHoneycombPositions(0, 0, hexSize, tile.subTopics!, 5) : [];
 
   // Helper to get path for sub-topic
   const getSubTopicPath = (name: string) => {
     if (name === 'Vektor') return '/data-science/vektor';
+    if (name === 'StatLab') return '/data-science/statlab';
     return '#';
+  };
+
+  // Helper to get subtext for sub-topic
+  const getSubTopicSubtext = (name: string) => {
+    if (name === 'Vektor') return 'NumPy + Linear Algebra';
+    if (name === 'StatLab') return 'Pandas + Statistics';
+    return '';
   };
 
   const content = (
     <div 
       className="relative" 
-      style={{ transform: isHovered && isClickable ? 'scale(1.2)' : `scale(${pushScale})`, zIndex: isHovered ? 100 : (isClickable ? 10 : 1), opacity: isHovered ? 1 : pushOpacity }}
-      onMouseEnter={() => isClickable && setHoveredTile(tile.id)}
+      style={{ transform: isHovered && hasSubTopics ? 'scale(1.2)' : `scale(${pushScale})`, zIndex: isHovered ? 100 : (isClickable ? 10 : 1), opacity: isHovered ? 1 : pushOpacity }}
+      onMouseEnter={() => hasSubTopics && setHoveredTile(tile.id)}
       onMouseLeave={() => setHoveredTile(null)}
     >
       <div
@@ -170,12 +179,14 @@ function HexagonTile({
           hexagon-item
           transition-all duration-700 ease-out
           flex flex-col items-center justify-center
-          ${isClickable 
-            ? 'cursor-pointer' 
+        ${isClickable 
+          ? 'cursor-pointer' 
+          : hasSubTopics
+            ? 'cursor-default'
             : isCenter 
               ? 'opacity-80' 
               : 'opacity-50'
-          }
+        }
         `}
       >
         <div className={`
@@ -183,7 +194,7 @@ function HexagonTile({
           flex flex-col items-center justify-center
           p-4 md:p-6
           transition-all duration-700
-          ${isClickable 
+          ${isClickable || hasSubTopics
             ? `bg-gradient-to-br ${tile.color} dark:${tile.color} text-white shadow-lg ${isHovered ? 'shadow-2xl' : ''}` 
             : isCenter
               ? 'bg-gradient-to-br from-gray-400 to-gray-500 dark:from-gray-600 dark:to-gray-700 text-white'
@@ -200,7 +211,7 @@ function HexagonTile({
       </div>
 
       {/* Sub-hexagons that appear on hover - positioned outside clipped hexagon in honeycomb pattern */}
-      {isHovered && isClickable && subHexPositions.length > 0 && (
+      {isHovered && hasSubTopics && subHexPositions.length > 0 && (
         <div 
           className="absolute"
           style={{
@@ -216,6 +227,18 @@ function HexagonTile({
             const subHexClip = "polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%)";
             const subHexPath = getSubTopicPath(subHex.name);
             const subHexClickable = subHexPath !== '#';
+
+            // Use parent tile color for actual app tiles, gray for "Coming Soon"
+            const isComingSoon = subHex.name === 'Coming Soon';
+            const subHexBgClass = isComingSoon 
+              ? 'bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-700 dark:to-gray-800'
+              : `bg-gradient-to-br ${tile.color} dark:${tile.color}`;
+            const subHexBorderClass = isComingSoon
+              ? 'border border-gray-400 dark:border-gray-600'
+              : 'border border-white/60 dark:border-white/50';
+            const subHexTextClass = isComingSoon
+              ? 'text-gray-700 dark:text-gray-300'
+              : 'text-white';
 
             const subHexElement = (
               <div
@@ -236,16 +259,23 @@ function HexagonTile({
                   w-full h-full
                   flex flex-col items-center justify-center
                   p-4 md:p-6
-                  bg-gradient-to-br from-white/25 to-white/15 dark:from-white/15 dark:to-white/8
-                  border border-white/40 dark:border-white/30
-                  backdrop-blur-md
-                  text-white
+                  ${subHexBgClass}
+                  ${subHexBorderClass}
+                  ${!isComingSoon ? 'backdrop-blur-md' : ''}
+                  ${subHexTextClass}
                   text-sm md:text-base
                   font-semibold
                   shadow-lg
                   ${subHexClickable ? 'hover:scale-110' : ''}
                 `}>
-                  {subHex.name}
+                  <div className="text-center">
+                    <div>{subHex.name}</div>
+                    {getSubTopicSubtext(subHex.name) && (
+                      <div className="text-xs mt-1 opacity-80 font-normal">
+                        {getSubTopicSubtext(subHex.name)}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -265,6 +295,7 @@ function HexagonTile({
     </div>
   );
 
+  // Only make it a link if it's clickable (has a valid path)
   if (isClickable) {
     return (
       <Link href={tile.path} className="inline-block align-top">
@@ -273,5 +304,6 @@ function HexagonTile({
     );
   }
 
-  return content;
+  // Return content without link wrapper for non-clickable tiles
+  return <div className="inline-block align-top">{content}</div>;
 }
