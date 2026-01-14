@@ -117,76 +117,113 @@ function HexagonTile({
   let pushScale = 1;
   let pushOpacity = 1;
   
-  if (hasHoveredTile && !isHovered && !isCenter) {
+  if (hasHoveredTile && !isHovered) {
     pushScale = 0.6;
     pushOpacity = 0.3;
   }
 
-  // Generate sub-hexagon positions (6 around the main hexagon)
-  const subHexPositions = isClickable && tile.subTopics ? tile.subTopics.map((_, subIndex) => {
-    const subAngle = (subIndex * 60 - 90) * (Math.PI / 180);
-    const subX = Math.cos(subAngle) * (hexSize * subHexSpacing);
-    const subY = Math.sin(subAngle) * (hexSize * subHexSpacing);
-    return { x: subX, y: subY, name: tile.subTopics?.[subIndex] || 'Coming Soon' };
-  }) : [];
+  // Generate sub-hexagon positions in honeycomb pattern (matching main layout)
+  // Helper function to calculate honeycomb positions - matches the CSS flexbox layout
+  const calculateHoneycombPositions = (centerX: number, centerY: number, hexSize: number, items: string[]) => {
+    const hexHeight = hexSize * 1.1547; // Height of pointy-top hexagon
+    const rowOverlap = hexHeight * 0.2886; // Vertical overlap between rows (matches CSS margin-top: -0.2886)
+    const rowOffsetX = hexSize / 2; // Horizontal shift for offset rows - half hex width to nest into gaps
+    
+    // Pattern matches main layout: 2-3-2 (but with center removed, so 2-2-2)
+    // Top row (offset): 2 hexagons centered between middle row positions, filling gaps above
+    // Middle row: 2 hexagons (left and right of center) - perfect, don't change
+    // Bottom row (offset): 2 hexagons centered between middle row positions, filling gaps below
+    
+    // Top row (offset) - centered between middle row positions to nest into gaps above
+    const topLeft = { x: centerX - hexSize / 2, y: centerY - hexHeight + rowOverlap, name: items[0] || 'Coming Soon', index: 0 };
+    const topRight = { x: centerX + hexSize / 2, y: centerY - hexHeight + rowOverlap, name: items[1] || 'Coming Soon', index: 1 };
+    
+    // Middle row - directly left and right of center (perfect, don't change)
+    const middleLeft = { x: centerX - hexSize, y: centerY, name: items[2] || 'Coming Soon', index: 2 };
+    const middleRight = { x: centerX + hexSize, y: centerY, name: items[3] || 'Coming Soon', index: 3 };
+    
+    // Bottom row (offset) - centered between middle row positions to nest into gaps below
+    const bottomLeft = { x: centerX - hexSize / 2, y: centerY + hexHeight - rowOverlap, name: items[4] || 'Coming Soon', index: 4 };
+    const bottomRight = { x: centerX + hexSize / 2, y: centerY + hexHeight - rowOverlap, name: items[5] || 'Coming Soon', index: 5 };
+    
+    return [topLeft, topRight, middleLeft, middleRight, bottomLeft, bottomRight];
+  };
+
+  const subHexPositions = isClickable && tile.subTopics ? calculateHoneycombPositions(0, 0, hexSize, tile.subTopics) : [];
+
+  // Helper to get path for sub-topic
+  const getSubTopicPath = (name: string) => {
+    if (name === 'Vektor') return '/data-science/vektor';
+    return '#';
+  };
 
   const content = (
-    <div
-      className={`
-        hexagon-item
-        transition-all duration-700 ease-out
-        flex flex-col items-center justify-center
-        ${isClickable 
-          ? 'cursor-pointer' 
-          : isCenter 
-            ? 'opacity-80' 
-            : 'opacity-50'
-        }
-      `}
-      style={{
-        transform: isHovered && isClickable ? 'scale(1.2)' : `scale(${pushScale})`,
-        zIndex: isHovered ? 100 : (isClickable ? 10 : 1),
-        opacity: isHovered ? 1 : pushOpacity,
-      }}
+    <div 
+      className="relative" 
+      style={{ transform: isHovered && isClickable ? 'scale(1.2)' : `scale(${pushScale})`, zIndex: isHovered ? 100 : (isClickable ? 10 : 1), opacity: isHovered ? 1 : pushOpacity }}
       onMouseEnter={() => isClickable && setHoveredTile(tile.id)}
       onMouseLeave={() => setHoveredTile(null)}
     >
-      <div className={`
-        w-full h-full
-        flex flex-col items-center justify-center
-        p-4 md:p-6
-        transition-all duration-700
-        ${isClickable 
-          ? `bg-gradient-to-br ${tile.color} dark:${tile.color} text-white shadow-lg ${isHovered ? 'shadow-2xl' : ''}` 
-          : isCenter
-            ? 'bg-gradient-to-br from-gray-400 to-gray-500 dark:from-gray-600 dark:to-gray-700 text-white'
-            : 'bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300'
-        }
-      `}>
-        <h3 className={`${isCenter ? 'text-xl md:text-2xl' : 'text-base md:text-lg'} font-bold mb-1 md:mb-2 text-center transition-all duration-700 ${isHovered ? 'scale-110' : ''}`}>
-          {tile.name}
-        </h3>
-        <p className={`text-xs md:text-sm text-center opacity-90 transition-all duration-700 ${isHovered ? 'opacity-100' : ''}`}>
-          {tile.description}
-        </p>
+      <div
+        className={`
+          hexagon-item
+          transition-all duration-700 ease-out
+          flex flex-col items-center justify-center
+          ${isClickable 
+            ? 'cursor-pointer' 
+            : isCenter 
+              ? 'opacity-80' 
+              : 'opacity-50'
+          }
+        `}
+      >
+        <div className={`
+          w-full h-full
+          flex flex-col items-center justify-center
+          p-4 md:p-6
+          transition-all duration-700
+          ${isClickable 
+            ? `bg-gradient-to-br ${tile.color} dark:${tile.color} text-white shadow-lg ${isHovered ? 'shadow-2xl' : ''}` 
+            : isCenter
+              ? 'bg-gradient-to-br from-gray-400 to-gray-500 dark:from-gray-600 dark:to-gray-700 text-white'
+              : 'bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300'
+          }
+        `}>
+          <h3 className={`${isCenter ? 'text-xl md:text-2xl' : 'text-base md:text-lg'} font-bold mb-1 md:mb-2 text-center transition-all duration-700 ${isHovered ? 'scale-110' : ''}`}>
+            {tile.name}
+          </h3>
+          <p className={`text-xs md:text-sm text-center opacity-90 transition-all duration-700 ${isHovered ? 'opacity-100' : ''}`}>
+            {tile.description}
+          </p>
+        </div>
       </div>
 
-      {/* Sub-hexagons that appear on hover */}
+      {/* Sub-hexagons that appear on hover - positioned outside clipped hexagon in honeycomb pattern */}
       {isHovered && isClickable && subHexPositions.length > 0 && (
-        <div className="absolute inset-0 pointer-events-none">
+        <div 
+          className="absolute"
+          style={{
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 0,
+            height: 0,
+          }}
+        >
           {subHexPositions.map((subHex, subIndex) => {
-            const subHexH = Math.round(subHexSize * 1.1547);
+            const subHexH = Math.round(hexSize * 1.1547);
             const subHexClip = "polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%)";
+            const subHexPath = getSubTopicPath(subHex.name);
+            const subHexClickable = subHexPath !== '#';
 
-            return (
+            const subHexElement = (
               <div
-                key={subIndex}
-                className="absolute transition-all duration-500 ease-out"
+                className={`absolute transition-all duration-500 ease-out ${subHexClickable ? 'cursor-pointer' : ''}`}
                 style={{
-                  left: `calc(50% + ${subHex.x}px)`,
-                  top: `calc(50% + ${subHex.y}px)`,
+                  left: `${subHex.x}px`,
+                  top: `${subHex.y}px`,
                   transform: 'translate(-50%, -50%)',
-                  width: `${subHexSize}px`,
+                  width: `${hexSize}px`,
                   height: `${subHexH}px`,
                   clipPath: subHexClip,
                   WebkitClipPath: subHexClip,
@@ -197,19 +234,30 @@ function HexagonTile({
                 <div className={`
                   w-full h-full
                   flex flex-col items-center justify-center
-                  p-2
+                  p-4 md:p-6
                   bg-gradient-to-br from-white/25 to-white/15 dark:from-white/15 dark:to-white/8
                   border border-white/40 dark:border-white/30
                   backdrop-blur-md
                   text-white
-                  text-xs
+                  text-sm md:text-base
                   font-semibold
                   shadow-lg
+                  ${subHexClickable ? 'hover:scale-110' : ''}
                 `}>
                   {subHex.name}
                 </div>
               </div>
             );
+
+            if (subHexClickable) {
+              return (
+                <Link key={subIndex} href={subHexPath}>
+                  {subHexElement}
+                </Link>
+              );
+            }
+
+            return <div key={subIndex}>{subHexElement}</div>;
           })}
         </div>
       )}
