@@ -29,6 +29,9 @@ export default function Home() {
         <h1 className="text-5xl md:text-6xl font-black mb-4 text-left text-gray-900 dark:text-white tracking-tight absolute top-0 left-0 z-10" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '-0.02em' }}>
           MOSAIC
         </h1>
+        <div className="absolute top-0 right-0 z-10 bg-blue-500 text-white px-4 py-2 rounded-lg font-bold text-lg">
+          hello world
+        </div>
 
         {/* Hexagonal Mosaic Layout */}
         <div className="flex justify-center items-center min-h-[600px] md:min-h-[700px]">
