@@ -3,6 +3,7 @@ Tests for FastAPI endpoints
 """
 
 from fastapi.testclient import TestClient
+
 from main import app
 
 # TestClient takes app as positional argument

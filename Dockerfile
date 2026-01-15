@@ -1,9 +1,9 @@
-# Build stage for Next.js
-FROM node:20-alpine AS nextjs-builder
-WORKDIR /app
-COPY package*.json ./
+# Build stage for Nuxt
+FROM node:20-alpine AS nuxt-builder
+WORKDIR /app/nuxt
+COPY nuxt/package*.json ./
 RUN npm ci
-COPY . .
+COPY nuxt ./
 RUN npm run build
 
 # Final stage
@@ -13,13 +13,9 @@ WORKDIR /app
 # Install Node.js and npm
 RUN apt-get update && apt-get install -y nodejs npm supervisor && rm -rf /var/lib/apt/lists/*
 
-# Copy Next.js build
-COPY --from=nextjs-builder /app/.next ./.next
-COPY --from=nextjs-builder /app/node_modules ./node_modules
-COPY --from=nextjs-builder /app/package.json ./package.json
-COPY --from=nextjs-builder /app/public ./public
-COPY --from=nextjs-builder /app/app ./app
-COPY --from=nextjs-builder /app/next.config.js ./next.config.js
+# Copy Nuxt build output
+COPY --from=nuxt-builder /app/nuxt/.output ./nuxt/.output
+COPY --from=nuxt-builder /app/nuxt/package.json ./nuxt/package.json
 
 # Copy FastAPI
 COPY api ./api
@@ -31,8 +27,8 @@ RUN pip install --no-cache-dir -r api/requirements.txt
 RUN echo '[supervisord]' > /etc/supervisor/conf.d/supervisord.conf && \
     echo 'nodaemon=true' >> /etc/supervisor/conf.d/supervisord.conf && \
     echo '' >> /etc/supervisor/conf.d/supervisord.conf && \
-    echo '[program:nextjs]' >> /etc/supervisor/conf.d/supervisord.conf && \
-    echo 'command=npm start' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo '[program:nuxt]' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'command=node /app/nuxt/.output/server/index.mjs' >> /etc/supervisor/conf.d/supervisord.conf && \
     echo 'directory=/app' >> /etc/supervisor/conf.d/supervisord.conf && \
     echo 'autostart=true' >> /etc/supervisor/conf.d/supervisord.conf && \
     echo 'autorestart=true' >> /etc/supervisor/conf.d/supervisord.conf && \

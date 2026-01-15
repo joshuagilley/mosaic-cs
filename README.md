@@ -1,13 +1,13 @@
 # Mosaic
 
-A sandbox environment for mathematical computing and exploration. Built with Next.js, FastAPI, and deployed on Fly.io.
+A sandbox environment for mathematical computing and exploration. Built with Nuxt, FastAPI, and deployed on Fly.io.
 
 ## Features
 
 - **Vektor**: Interactive linear algebra playground with matrix transformations, eigenvalues, eigenvectors, and PCA
 - Hexagonal mosaic interface for navigating different tools
 - FastAPI backend for mathematical computations
-- Next.js frontend with TypeScript
+- Nuxt frontend with TypeScript
 
 ## Setup
 
@@ -19,9 +19,11 @@ A sandbox environment for mathematical computing and exploration. Built with Nex
 
 ### Installation
 
-1. **Install Node.js dependencies:**
+1. **Install Nuxt dependencies:**
    ```bash
+   cd nuxt
    npm install
+   cd ..
    ```
 
 2. **Install Python dependencies:**
@@ -49,14 +51,12 @@ A sandbox environment for mathematical computing and exploration. Built with Nex
 
 1. **Start the FastAPI backend:**
    ```bash
-   npm run api
-   # or
    cd api && uvicorn main:app --reload --port 8000
    ```
 
-2. **Start the Next.js frontend:**
+2. **Start the Nuxt frontend:**
    ```bash
-   npm run dev
+   cd nuxt && npm run dev
    ```
 
 3. **Open your browser:**
@@ -68,40 +68,30 @@ A sandbox environment for mathematical computing and exploration. Built with Nex
 
 **Run Python tests:**
 ```bash
-npm run test
-# or
-cd api && python -m pytest ../tests -v
+cd api && python -m pytest tests -v
 ```
 
-**Run ESLint:**
+**Run ESLint (Nuxt):**
 ```bash
-npm run lint
+cd nuxt && npm run lint
 ```
 
 **Run all checks:**
 ```bash
-npm run test:all
+cd api && python -m pytest tests -v
+cd ../nuxt && npm run lint
 ```
 
 ### Code Formatting
 
 **Format Python code:**
 ```bash
-npm run format:python
-# or manually:
-cd api && ruff format ../api ../tests && ruff check --fix ../api ../tests
+cd api && ruff format . tests && ruff check --fix . tests
 ```
 
 **Format JavaScript/TypeScript:**
 ```bash
-npm run format:js
-# or
-npm run lint:fix
-```
-
-**Format everything:**
-```bash
-npm run format
+cd nuxt && npm run lint
 ```
 
 ## Pre-commit Hooks
@@ -110,7 +100,7 @@ The pre-commit hook automatically runs:
 1. **Ruff formatting** - Formats Python code
 2. **Ruff linting** - Checks Python code quality
 3. **Pytest** - Runs all Python tests
-4. **ESLint** - Checks JavaScript/TypeScript code
+4. **ESLint** - Checks Nuxt code
 
 If any check fails, the commit will be blocked. To bypass (not recommended):
 ```bash
@@ -122,22 +112,18 @@ git commit --no-verify
 ```
 mosaic/
 ├── api/                    # FastAPI backend
-│   ├── main.py            # FastAPI app and routes
-│   ├── linear_algebra.py  # Core NumPy linear algebra functions
-│   └── requirements.txt   # Python dependencies
-├── app/                    # Next.js app directory
-│   ├── page.tsx           # Home page with mosaic layout
-│   ├── vektor/            # Vektor linear algebra playground
-│   └── ...
-├── tests/                  # Test suite
-│   ├── test_linear_algebra.py  # Unit tests for linear algebra
-│   └── test_api.py        # API endpoint tests
-├── Dockerfile             # Docker configuration
-├── fly.toml               # Fly.io deployment config
-├── pyproject.toml         # Ruff and pytest configuration
-├── pytest.ini             # Pytest configuration
-├── pre-commit.sh          # Pre-commit hook script
-└── package.json           # Node.js dependencies and scripts
+│   ├── main.py             # FastAPI app and routes
+│   ├── requirements.txt    # Python dependencies
+│   ├── pyproject.toml      # Ruff/mypy/pytest config
+│   └── tests/              # Python tests
+├── nuxt/                   # Nuxt frontend
+│   ├── app/                # Nuxt app source (pages/components/assets)
+│   ├── package.json        # Nuxt scripts and deps
+│   └── nuxt.config.ts      # Nuxt configuration
+├── Dockerfile              # Docker configuration
+├── fly.toml                # Fly.io deployment config
+├── pre-commit.sh           # Pre-commit hook script
+└── README.md
 ```
 
 ## Deployment

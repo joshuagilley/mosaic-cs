@@ -33,7 +33,7 @@ body {
 
 /* Honeycomb grid using explicit rows with flexbox */
 .hexagon-main {
-  --s: 160px;  /* size  */
+  --s: 160px; /* size */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,19 +43,19 @@ body {
   display: flex;
   justify-content: center;
   gap: 5px; /* subtle spacing between hexagons */
-  margin-top: calc(var(--s) * -0.2886 + 5px); /* overlap for honeycomb interlock + spacing */
+  margin-top: calc(var(--s) * -0.2886 + 5px);
 }
 
 .hex-row:first-child {
-  margin-top: -5px; /* move top row up slightly */
+  margin-top: -5px;
 }
 
 .hex-row:last-child {
-  margin-top: calc(var(--s) * -0.2886 + 5px); /* move bottom row down slightly */
+  margin-top: calc(var(--s) * -0.2886 + 5px);
 }
 
 .hex-row.offset {
-  transform: translateX(calc(var(--s) / 1000)); /* half hex width for pointy-top stagger */
+  transform: translateX(calc(var(--s) / 1000));
 }
 
 .hexagon-item {

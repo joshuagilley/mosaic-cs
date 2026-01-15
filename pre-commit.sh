@@ -8,16 +8,32 @@ set -e
 echo "Running pre-commit checks..."
 echo ""
 
-# Get the project directory (works from git root or script location)
-if [ -d ".git" ]; then
-    PROJECT_DIR="$(pwd)"
-else
-    PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Get the project directory (works from git root or hooks)
+PROJECT_DIR=""
+if command -v git &> /dev/null; then
+    PROJECT_DIR="$(git rev-parse --show-toplevel 2>/dev/null || true)"
 fi
+
+if [ -z "$PROJECT_DIR" ]; then
+    # Resolve the real path of this script (handles symlinks from .git/hooks)
+    SCRIPT_PATH="$(python -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "${BASH_SOURCE[0]}")"
+    PROJECT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
+fi
+
+# If still not at repo root, walk upward until we find expected structure
+SEARCH_DIR="$PROJECT_DIR"
+while [ "$SEARCH_DIR" != "/" ]; do
+    if [ -d "$SEARCH_DIR/api" ] && [ -f "$SEARCH_DIR/nuxt/package.json" ]; then
+        PROJECT_DIR="$SEARCH_DIR"
+        break
+    fi
+    SEARCH_DIR="$(dirname "$SEARCH_DIR")"
+done
+
 cd "$PROJECT_DIR"
 
 # Check if we're in the right directory
-if [ ! -f "package.json" ] || [ ! -d "api" ]; then
+if [ ! -d "api" ] || [ ! -f "nuxt/package.json" ]; then
     echo "Error: Must run from project root directory"
     exit 1
 fi
@@ -133,9 +149,9 @@ echo "📦 Running JavaScript/TypeScript checks..."
 if ! command -v npm &> /dev/null; then
     echo "Warning: npm not found, skipping JavaScript checks"
 else
-    # Run ESLint
+    # Run ESLint for Nuxt
     echo "🔍 Checking JavaScript/TypeScript code with ESLint..."
-    npm run lint || {
+    (cd nuxt && npm run lint) || {
         echo "❌ ESLint failed!"
         exit 1
     }
